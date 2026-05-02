@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reporte Diario · CPF Orotoy</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2330;
+    --border: #30363d;
+    --accent: #f0a500;
+    --accent2: #2ea043;
+    --accent3: #1f6feb;
+    --danger: #da3633;
+    --text: #e6edf3;
+    --text2: #8b949e;
+    --text3: #6e7681;
+    --radius: 8px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0d1117 0%, #1a2332 100%);
+    border-bottom: 2px solid var(--accent);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+  }
+  .logo-area {
+    display: flex;
+    flex-direction: column;
+  }
+  .logo-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .logo-sub {
+    font-size: 11px;
+    color: var(--text2);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .header-badge {
+    margin-left: auto;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: var(--text2);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .header-badge .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent2);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  /* AUTH PANEL */
+  #auth-panel {
+    max-width: 480px;
+    margin: 60px auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: var(--shadow);
+    text-align: center;
+  }
+  #auth-panel h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  #auth-panel p {
+    color: var(--text2);
+    margin-bottom: 32px;
+    font-size: 14px;
+  }
+  .btn-ms {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: #2ea3f2;
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    padding: 14px 28px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .btn-ms:hover { background: #1a8cd8; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(46,163,242,0.3); }
+
+  /* MAIN FORM */
+  #form-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+    display: none;
+  }
+
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .section-header {
+    background: var(--surface2);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    background: var(--accent);
+    color: #000;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800;
+    font-family: 'Barlow Condensed', sans-serif;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+  .section-body { padding: 20px; }
+
+  /* FORM CONTROLS */
+  .form-row {
+    display: grid;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .form-row.cols-2 { grid-template-columns: 1fr 1fr; }
+  .form-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .form-row.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text2);
+  }
+  label .req { color: var(--accent); margin-left: 2px; }
+
+  input, select, textarea {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    padding: 10px 14px;
+    font-size: 14px;
+    font-family: 'Barlow', sans-serif;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent3);
+    box-shadow: 0 0 0 3px rgba(31,111,235,0.2);
+  }
+  select option { background: var(--surface); }
+  textarea { resize: vertical; min-height: 80px; }
+
+  /* ISO ROWS */
+  .iso-table { width: 100%; border-collapse: collapse; }
+  .iso-table th {
+    background: var(--surface2);
+    padding: 8px 10px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text2);
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .iso-table td {
+    padding: 6px 6px;
+    border-bottom: 1px solid rgba(48,54,61,0.5);
+    vertical-align: middle;
+  }
+  .iso-table tr:last-child td { border-bottom: none; }
+  .iso-table input, .iso-table select {
+    padding: 7px 10px;
+    font-size: 13px;
+  }
+  .m2-display {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 7px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    text-align: center;
+    min-width: 80px;
+  }
+  .tipo-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-align: center;
+    min-width: 36px;
+  }
+  .tipo-AT { background: rgba(46,160,67,0.2); color: #3fb950; border: 1px solid rgba(46,160,67,0.3); }
+  .tipo-H  { background: rgba(31,111,235,0.2); color: #58a6ff; border: 1px solid rgba(31,111,235,0.3); }
+
+  .btn-add-row {
+    background: transparent;
+    border: 1px dashed var(--border);
+    color: var(--text2);
+    padding: 10px;
+    width: 100%;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+    margin-top: 10px;
+  }
+  .btn-add-row:hover { border-color: var(--accent3); color: var(--accent3); background: rgba(31,111,235,0.05); }
+
+  .btn-del {
+    background: transparent;
+    border: none;
+    color: var(--danger);
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: background 0.2s;
+  }
+  .btn-del:hover { background: rgba(218,54,51,0.15); }
+
+  /* PERSONAL GRID */
+  .personal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 10px;
+  }
+  .personal-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .personal-card:hover { border-color: var(--accent3); }
+  .personal-card.active {
+    border-color: var(--accent2);
+    background: rgba(46,160,67,0.08);
+  }
+  .personal-card .check {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    font-size: 12px;
+  }
+  .personal-card.active .check {
+    background: var(--accent2);
+    border-color: var(--accent2);
+    color: white;
+  }
+  .personal-info { flex: 1; min-width: 0; }
+  .personal-nombre {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .personal-cargo {
+    font-size: 11px;
+    color: var(--text2);
+    margin-top: 2px;
+  }
+
+  /* WEATHER */
+  .weather-options {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .weather-btn {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    padding: 10px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .weather-btn:hover { border-color: var(--accent3); color: var(--text); }
+  .weather-btn.active { border-color: var(--accent); background: rgba(240,165,0,0.1); color: var(--accent); }
+
+  /* SUBMIT */
+  .submit-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    z-index: 100;
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.4);
+  }
+  .submit-summary { font-size: 13px; color: var(--text2); }
+  .submit-summary strong { color: var(--accent); }
+
+  .btn-submit {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: var(--radius);
+    padding: 14px 32px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn-submit:hover { background: #ffb700; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(240,165,0,0.4); }
+  .btn-submit:disabled { background: var(--border); color: var(--text3); cursor: not-allowed; transform: none; box-shadow: none; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    top: 80px; right: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 20px;
+    font-size: 14px;
+    display: flex; align-items: center; gap: 10px;
+    box-shadow: var(--shadow);
+    z-index: 999;
+    transform: translateX(120%);
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    max-width: 360px;
+  }
+  .toast.show { transform: translateX(0); }
+  .toast.success { border-color: var(--accent2); }
+  .toast.error { border-color: var(--danger); }
+  .toast-icon { font-size: 20px; flex-shrink: 0; }
+
+  /* LOADING */
+  .loading-overlay {
+    position: fixed; inset: 0;
+    background: rgba(13,17,23,0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .loading-overlay.show { display: flex; }
+  .spinner {
+    width: 48px; height: 48px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { color: var(--text2); font-size: 14px; }
+
+  @media (max-width: 600px) {
+    .form-row.cols-2, .form-row.cols-3, .form-row.cols-4 { grid-template-columns: 1fr; }
+    .personal-grid { grid-template-columns: 1fr; }
+    header { padding: 12px 16px; }
+    #form-container { padding: 16px 12px 80px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-area">
+    <div class="logo-title">⚡ Soldamec</div>
+    <div class="logo-sub">Reporte Diario · CPF Orotoy</div>
+  </div>
+  <div class="header-badge" id="user-badge" style="display:none">
+    <div class="dot"></div>
+    <span id="user-name-display">Conectado</span>
+  </div>
+</header>
+
+<!-- AUTH PANEL -->
+<div id="auth-panel">
+  <h2>Reporte Diario</h2>
+  <p>Inicia sesión con tu cuenta de Soldamec para enviar el reporte diario de obra al sistema.</p>
+  <button class="btn-ms" id="btn-login" onclick="login()">
+    <svg width="20" height="20" viewBox="0 0 21 21" fill="none">
+      <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
+      <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
+      <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
+      <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
+    </svg>
+    Iniciar sesión con Microsoft
+  </button>
+</div>
+
+<!-- FORM -->
+<div id="form-container">
+
+  <!-- 1. INFO GENERAL -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Información General del Día</div>
+    </div>
+    <div class="section-body">
+      <div class="form-row cols-3">
+        <div class="form-group">
+          <label>Fecha del reporte <span class="req">*</span></label>
+          <input type="date" id="fecha" required>
+        </div>
+        <div class="form-group">
+          <label>Hora inicio labores</label>
+          <input type="time" id="hora-inicio" value="07:00">
+        </div>
+        <div class="form-group">
+          <label>Hora fin labores</label>
+          <input type="time" id="hora-fin" value="16:00">
+        </div>
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label>Estado del tiempo <span class="req">*</span></label>
+          <div class="weather-options" id="weather-options">
+            <button type="button" class="weather-btn active" data-val="SOLEADO" onclick="selectWeather(this)">☀️ Soleado</button>
+            <button type="button" class="weather-btn" data-val="NUBLADO" onclick="selectWeather(this)">⛅ Nublado</button>
+            <button type="button" class="weather-btn" data-val="LLUVIOSO" onclick="selectWeather(this)">🌧️ Lluvioso</button>
+            <button type="button" class="weather-btn" data-val="TORMENTA" onclick="selectWeather(this)">⛈️ Tormenta</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Horas de lluvia</label>
+          <input type="number" id="horas-lluvia" value="0" min="0" max="12" step="0.5">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Charla de seguridad / ATS del día</label>
+          <input type="text" id="charla" placeholder="Ej: Trabajo en alturas, Uso de EPP...">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. ISOMETRIA -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Isometría Trabajada</div>
+    </div>
+    <div class="section-body">
+      <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">Registra cada isométrico trabajado durante el día con los metros lineales instalados.</p>
+      <div style="overflow-x:auto;">
+        <table class="iso-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th style="min-width:320px">Código Isométrico</th>
+              <th>Tipo</th>
+              <th style="min-width:120px">ML Instalados</th>
+              <th style="min-width:90px">M² Calc.</th>
+              <th>Observación</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="iso-tbody"></tbody>
+        </table>
+      </div>
+      <button type="button" class="btn-add-row" onclick="addIsoRow()">+ Agregar isométrico</button>
+    </div>
+  </div>
+
+  <!-- 3. PERSONAL -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Personal en Obra</div>
+    </div>
+    <div class="section-body">
+      <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">Marca quién asistió hoy.</p>
+      <div class="personal-grid" id="personal-grid"></div>
+    </div>
+  </div>
+
+  <!-- 4. OBSERVACIONES -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Observaciones</div>
+    </div>
+    <div class="section-body">
+      <div class="form-group">
+        <label>Observaciones del día</label>
+        <textarea id="observaciones" placeholder="Novedades, incidentes, restricciones de acceso, materiales faltantes..."></textarea>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 5. MATERIALES -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Control de Materiales</div>
+    </div>
+    <div class="section-body">
+      <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">Registra las cantidades de materiales utilizados hoy.</p>
+      <div class="form-row cols-3">
+        <div class="form-group">
+          <label>Zuncho Metálico (unidades)</label>
+          <input type="number" id="mat-zuncho" min="0" value="0" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label>Hebilla (unidades)</label>
+          <input type="number" id="mat-hebilla" min="0" value="0" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label>Silicona (tarros)</label>
+          <input type="number" id="mat-silicona" min="0" value="0" placeholder="0">
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /form-container -->
+
+<!-- SUBMIT BAR -->
+<div class="submit-bar" id="submit-bar" style="display:none">
+  <div class="submit-summary" id="submit-summary">Completa el formulario para enviar</div>
+  <button class="btn-submit" id="btn-submit" onclick="submitReport()">
+    📤 Enviar Reporte
+  </button>
+</div>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loading">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loading-text">Enviando reporte...</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toast-icon"></span>
+  <span id="toast-msg"></span>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-authentication-library-for-js/3.11.0/msal-browser.min.js"></script>
+<script>
+
+// ── CONFIG ──
+const CLIENT_ID  = '7d7d4ea9-5e65-4a1d-a1f6-9bbe7e57c354';
+const TENANT_ID  = '22f789c2-c9cb-416b-a869-279c18d919d8';
+const EXCEL_FILE = 'MAESTRO_OBRA_CPF_OROTOY.xlsx';
+
+const msalConfig = {
+  auth: {
+    clientId: CLIENT_ID,
+    authority: `https://login.microsoftonline.com/${TENANT_ID}`,
+    redirectUri: 'https://industriassoldamec.sharepoint.com/Shared%20Documents/reporte_cpf_orotoy.html',
+  },
+  cache: { cacheLocation: 'sessionStorage' }
+};
+const msalInstance = new msal.PublicClientApplication(msalConfig);
+const scopes = ['Files.ReadWrite', 'User.Read'];
+
+let accessToken = null;
+let driveItemId = null;
+let workbookId  = null;
+
+// ── ISOMETRICS DATA ──
+const ISOS = [{"item":1,"code":"12\"-PFL-00003-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":2,"code":"12\"-PFL-00012-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":3,"code":"12\"-PFL-00013-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":4,"code":"12\"-PFL-00014-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":5,"code":"12\"-CRW-00015-AA1A33-01-H-1.5\"","tipo":"H"},{"item":6,"code":"12\"-CRW-00016-AA1A33-01-H-1.5\"","tipo":"H"},{"item":7,"code":"12\"-CRW-00017-AA1A33-01-H-1.5\"","tipo":"H"},{"item":8,"code":"12\"-CRW-00018-AA1A33-01-H-1.5\"","tipo":"H"},{"item":9,"code":"12\"-CRW-00019-AA1A33-01-H-1.5\"","tipo":"H"},{"item":10,"code":"12\"-CRW-00020-AA1A33-01-H-1.5\"","tipo":"H"},{"item":11,"code":"12\"-CRW-00021-AA1A33-01-H-1.5\"","tipo":"H"},{"item":12,"code":"12\"-CRW-00022-AA1A33-01-H-1.5\"","tipo":"H"},{"item":13,"code":"12\"-CRW-01010-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":14,"code":"10\"-CRW-01011-AA1A33-01-H-1.5\"","tipo":"H"},{"item":15,"code":"8\"-CRW-01013-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":16,"code":"20\"-CRW-01035-AA1A33-01-H-1.5\"","tipo":"H"},{"item":17,"code":"8\"-CRW-01038-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":18,"code":"8\"-CRW-01039-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":19,"code":"12\"-CRW-01040-AA1A33-01-AT-1\"","tipo":"AT"},{"item":20,"code":"10\"-CRW-01041-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":21,"code":"10\"-CRW-01042-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":22,"code":"10\"-CRW-01043-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":23,"code":"8\"-CRW-01044-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":24,"code":"4\"-CRW-01045-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":25,"code":"10\"-CRW-01048-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":26,"code":"4\"-CRW-01048-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":27,"code":"8\"-CRW-01049-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":28,"code":"4\"-CRW-01050-AA1A33-01-AT-1\"","tipo":"AT"},{"item":29,"code":"16\"-CRW-01056-AA1A33-01-H-1.5\"","tipo":"H"},{"item":30,"code":"16\"-CRW-01057-AA1A33-01-H-1.5\"","tipo":"H"},{"item":31,"code":"4\"-CRW-01095-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":32,"code":"6\"-CRW-01109-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":33,"code":"6\"-CRW-01110-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":34,"code":"6\"-CRW-01111-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":35,"code":"6\"-CRW-01112-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":36,"code":"8\"-CRU-03039-AA1A33-01-H-1.5\"","tipo":"H"},{"item":37,"code":"12\"-PFL-00033-AA2A33-01-H-1.5\"","tipo":"H"},{"item":38,"code":"12\"-PFL-00001-AA2A33-01-H-1.5\"","tipo":"H"},{"item":39,"code":"12\"-PFL-00002-AA2A33-01-H-1.5\"","tipo":"H"},{"item":40,"code":"20\"-PFL-00005-AA2A33-01-H-1.5\"","tipo":"H"},{"item":41,"code":"4\"-CRW-01043-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":42,"code":"20\"-PFL-00007-AA2A33-01-H-1.5\"","tipo":"H"},{"item":43,"code":"20\"-PFL-00009-AA2A33-01-H-1.5\"","tipo":"H"},{"item":44,"code":"20\"-PFL-00010-AA2A33-01-H-1.5\"","tipo":"H"},{"item":45,"code":"20\"-PFL-00011-AA2A33-01-H-1.5\"","tipo":"H"},{"item":46,"code":"20\"-PFL-00034-AA2A32-01-H-1.5\"","tipo":"H"},{"item":47,"code":"6\"-PFL-00006-AA2A33-01-H-1.5\"","tipo":"H"},{"item":48,"code":"12\"-CRU-03029-AA3A33-01-H-1.5\"","tipo":"H"},{"item":49,"code":"16\"-CRW-01121-AA1A33-01-H-1.5\"","tipo":"H"},{"item":50,"code":"16\"-CRW-01071-AA1A33-01-H-1.5\"","tipo":"H"},{"item":51,"code":"16\"-CRW-01060-AA1A33-01-H-1.5\"","tipo":"H"},{"item":52,"code":"16\"-CRW-01061-AA1A33-01-H-1.5\"","tipo":"H"},{"item":53,"code":"16\"-CRW-01062-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":54,"code":"16\"-CRW-01063-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":55,"code":"16\"-CRW-01066-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":56,"code":"6\"-CRW-01072-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":57,"code":"8\"-CRW-01073-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":58,"code":"16\"-CRW-01064-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":59,"code":"6\"-CRW-01074-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":60,"code":"8\"-CRW-01075-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":61,"code":"4\"-CRW-01076-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":62,"code":"20\"-PFL-00008-AA2A33-01-H-1.5\"","tipo":"H"},{"item":63,"code":"4\"-CRW-01088-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":64,"code":"4\"-CRW-01089-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":65,"code":"4\"-CRW-01090-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":66,"code":"4\"-CRW-01091-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":67,"code":"4\"-CRW-01092-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":68,"code":"4\"-CRW-01093-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":69,"code":"4\"-CRW-01094-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":70,"code":"4\"-CRW-01096-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":71,"code":"4\"-CRW-01097-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":72,"code":"4\"-CRW-01098-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":73,"code":"4\"-CRW-01099-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":74,"code":"4\"-CRW-01100-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":75,"code":"4\"-CRW-01101-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":76,"code":"4\"-CRW-01102-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":77,"code":"6\"-CRW-01103-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":78,"code":"6\"-CRW-01104-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":79,"code":"6\"-CRW-01105-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":80,"code":"6\"-CRW-01106-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":81,"code":"6\"-CRW-01107-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":82,"code":"6\"-CRW-01108-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":83,"code":"8\"-CRW-01113-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":84,"code":"10\"-CRW-01114-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":85,"code":"10\"-CRW-01115-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":86,"code":"12\"-CRW-01116-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":87,"code":"12\"-CRW-01117-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":88,"code":"4\"-PFL-00035-AA2A33-01-H-1.5\"","tipo":"H"},{"item":89,"code":"4\"-PFL-00036-AA2A33-01-H-1.5\"","tipo":"H"},{"item":90,"code":"4\"-PFL-00037-AA2A33-01-H-1.5\"","tipo":"H"},{"item":91,"code":"4\"-PFL-00038-AA2A33-01-H-1.5\"","tipo":"H"},{"item":92,"code":"4\"-PFL-00039-AA2A33-01-H-1.5\"","tipo":"H"},{"item":93,"code":"4\"-CRW-01118-AA1A33-01-H-1.5\"","tipo":"H"},{"item":94,"code":"4\"-PFL-00040-AA2A33-01-H-1.5\"","tipo":"H"},{"item":95,"code":"4\"-PFL-00041-AA2A33-01-H-1.5\"","tipo":"H"},{"item":96,"code":"4\"-PFL-00042-AA2A33-01-H-1.5\"","tipo":"H"},{"item":97,"code":"4\"-PFL-00043-AA2A33-01-H-1.5\"","tipo":"H"},{"item":98,"code":"4\"-PFL-00044-AA2A33-01-H-1.5\"","tipo":"H"},{"item":99,"code":"4\"-PFL-00045-AA2A33-01-H-1.5\"","tipo":"H"},{"item":100,"code":"4\"-PFL-00046-AA2A33-01-H-1.5\"","tipo":"H"},{"item":101,"code":"4\"-PFL-00047-AA2A33-01-H-1.5\"","tipo":"H"},{"item":102,"code":"4\"-PFL-00048-AA2A33-01-H-1.5\"","tipo":"H"},{"item":103,"code":"4\"-PFL-00049-AA2A33-01-H-1.5\"","tipo":"H"},{"item":104,"code":"4\"-PFL-00050-AA2A33-01-H-1.5\"","tipo":"H"},{"item":105,"code":"4\"-PFL-00051-AA2A33-01-H-1.5\"","tipo":"H"},{"item":106,"code":"4\"-PFL-00052-AA2A33-01-H-1.5\"","tipo":"H"},{"item":107,"code":"4\"-PFL-00053-AA2A33-01-H-1.5\"","tipo":"H"},{"item":108,"code":"4\"-PFL-00054-AA2A33-01-H-1.5\"","tipo":"H"},{"item":109,"code":"4\"-PFL-00055-AA2A33-01-H-1.5\"","tipo":"H"},{"item":110,"code":"4\"-PFL-00056-AA2A33-01-H-1.5\"","tipo":"H"},{"item":111,"code":"4\"-PFL-00057-AA2A33-01-H-1.5\"","tipo":"H"},{"item":112,"code":"4\"-PFL-00058-AA2A33-01-H-1.5\"","tipo":"H"},{"item":113,"code":"4\"-PFL-00059-AA2A33-01-H-1.5\"","tipo":"H"},{"item":114,"code":"4\"-PFL-00060-AA2A33-01-H-1.5\"","tipo":"H"},{"item":115,"code":"4\"-PFL-00061-AA2A33-01-H-1.5\"","tipo":"H"},{"item":116,"code":"4\"-PFL-00062-AA2A33-01-H-1.5\"","tipo":"H"},{"item":117,"code":"4\"-PFL-00063-AA2A33-01-H-1.5\"","tipo":"H"},{"item":118,"code":"4\"-PFL-00064-AA2A33-01-H-1.5\"","tipo":"H"},{"item":119,"code":"4\"-PFL-00065-AA2A33-01-H-1.5\"","tipo":"H"},{"item":120,"code":"4\"-PFL-00066-AA2A33-01-H-1.5\"","tipo":"H"},{"item":121,"code":"4\"-PFL-00067-AA2A33-01-H-1.5\"","tipo":"H"},{"item":122,"code":"4\"-PFL-00068-AA2A33-01-H-1.5\"","tipo":"H"},{"item":123,"code":"4\"-PFL-00069-AA2A33-01-H-1.5\"","tipo":"H"},{"item":124,"code":"4\"-PFL-00070-AA2A33-01-H-1.5\"","tipo":"H"},{"item":125,"code":"4\"-PFL-00071-AA2A33-01-H-1.5\"","tipo":"H"},{"item":126,"code":"4\"-PFL-00072-AA2A33-01-H-1.5\"","tipo":"H"},{"item":127,"code":"4\"-PFL-00073-AA2A33-01-H-1.5\"","tipo":"H"},{"item":128,"code":"4\"-PFL-00074-AA2A33-01-H-1.5\"","tipo":"H"},{"item":129,"code":"4\"-PFL-00075-AA2A33-01-H-1.5\"","tipo":"H"},{"item":130,"code":"4\"-PFL-00076-AA2A33-01-H-1.5\"","tipo":"H"},{"item":131,"code":"4\"-PFL-00077-AA2A33-01-H-1.5\"","tipo":"H"},{"item":132,"code":"4\"-PFL-00078-AA2A33-01-H-1.5\"","tipo":"H"},{"item":133,"code":"4\"-PFL-00079-AA2A33-01-H-1.5\"","tipo":"H"},{"item":134,"code":"4\"-PFL-00080-AA2A33-01-H-1.5\"","tipo":"H"},{"item":135,"code":"4\"-PFL-00081-AA2A33-01-H-1.5\"","tipo":"H"},{"item":136,"code":"4\"-PFL-00082-AA2A33-01-H-1.5\"","tipo":"H"},{"item":137,"code":"4\"-PFL-00083-AA2A33-01-H-1.5\"","tipo":"H"},{"item":138,"code":"4\"-PFL-00084-AA2A33-01-H-1.5\"","tipo":"H"},{"item":139,"code":"4\"-PFL-00085-AA2A33-01-H-1.5\"","tipo":"H"},{"item":140,"code":"4\"-PFL-00086-AA2A33-01-H-1.5\"","tipo":"H"},{"item":141,"code":"4\"-PFL-00087-AA2A33-01-H-1.5\"","tipo":"H"},{"item":142,"code":"4\"-PFL-00088-AA2A33-01-H-1.5\"","tipo":"H"},{"item":143,"code":"4\"-PFL-00089-AA2A33-01-H-1.5\"","tipo":"H"},{"item":144,"code":"4\"-PFL-00090-AA2A33-01-H-1.5\"","tipo":"H"},{"item":145,"code":"4\"-PFL-00091-AA2A33-01-H-1.5\"","tipo":"H"},{"item":146,"code":"4\"-PFL-00092-AA2A33-01-H-1.5\"","tipo":"H"},{"item":147,"code":"4\"-PFL-00093-AA2A33-01-H-1.5\"","tipo":"H"},{"item":148,"code":"4\"-PFL-00094-AA2A33-01-H-1.5\"","tipo":"H"},{"item":149,"code":"4\"-PFL-00095-AA2A33-01-H-1.5\"","tipo":"H"},{"item":150,"code":"4\"-PFL-00096-AA2A33-01-H-1.5\"","tipo":"H"},{"item":151,"code":"4\"-PFL-00097-AA2A33-01-H-1.5\"","tipo":"H"},{"item":152,"code":"4\"-PFL-00098-AA2A33-01-H-1.5\"","tipo":"H"},{"item":153,"code":"4\"-PFL-00099-AA2A33-01-H-1.5\"","tipo":"H"},{"item":154,"code":"4\"-PFL-00100-AA2A33-01-H-1.5\"","tipo":"H"},{"item":155,"code":"4\"-PFL-00101-AA2A33-01-H-1.5\"","tipo":"H"},{"item":156,"code":"4\"-PFL-00102-AA2A33-01-H-1.5\"","tipo":"H"},{"item":157,"code":"4\"-PFL-00103-AA2A33-01-H-1.5\"","tipo":"H"},{"item":158,"code":"4\"-PFL-00104-AA2A33-01-H-1.5\"","tipo":"H"},{"item":159,"code":"4\"-PFL-00105-AA2A33-01-H-1.5\"","tipo":"H"},{"item":160,"code":"4\"-PFL-00106-AA2A33-01-H-1.5\"","tipo":"H"},{"item":161,"code":"4\"-PFL-00107-AA2A33-01-H-1.5\"","tipo":"H"},{"item":162,"code":"4\"-PFL-00108-AA2A33-01-H-1.5\"","tipo":"H"},{"item":163,"code":"4\"-PFL-00109-AA2A33-01-H-1.5\"","tipo":"H"},{"item":164,"code":"4\"-PFL-00110-AA2A33-01-H-1.5\"","tipo":"H"},{"item":165,"code":"16\"-CRW-01120-AA1A33-01-H-1.5\"","tipo":"H"},{"item":166,"code":"16\"-CRW-01065-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":167,"code":"16\"-CRW-01067-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":168,"code":"16\"-CRW-01068-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":169,"code":"16\"-CRW-01119-AA1A33-01-H-1.5\"","tipo":"H"},{"item":170,"code":"16\"-CRW-01058-AA1A33-01-H-1.5\"","tipo":"H"},{"item":171,"code":"16\"-CRW-01059-AA1A33-01-H-1.5\"","tipo":"H"},{"item":172,"code":"8\"-CRW-01077-AA1A33-01-AT-1.5\"","tipo":"AT"},{"item":173,"code":"SCRUBBER DE ESTABILIZACION TANQUE TTI","tipo":"H"},{"item":174,"code":"SCRUBBER DESCARGA TTI","tipo":"H"},{"item":175,"code":"SCRUBBER SUCCION TTI","tipo":"H"}];
+
+const SCRUBBER_M2 = {
+  'SCRUBBER DE ESTABILIZACION TANQUE TTI': 4.45,
+  'SCRUBBER DESCARGA TTI': 4.45,
+  'SCRUBBER SUCCION TTI': 6.50
+};
+
+// DN tables for M2 calculation
+const DN_TABLE = {
+  '4"':  {dn_m: 0.1016, esp_p: 0.00602},
+  '6"':  {dn_m: 0.1524, esp_p: 0.00711},
+  '8"':  {dn_m: 0.2032, esp_p: 0.00818},
+  '10"': {dn_m: 0.2540, esp_p: 0.00927},
+  '12"': {dn_m: 0.3048, esp_p: 0.01031},
+  '16"': {dn_m: 0.4064, esp_p: 0.01207},
+  '18"': {dn_m: 0.4572, esp_p: 0.01427},
+  '20"': {dn_m: 0.5080, esp_p: 0.01509},
+  '24"': {dn_m: 0.6096, esp_p: 0.01748},
+};
+
+const PERSONAL_ALL = [
+  {nombre:'JIMENEZ ZAMORA WILSON ALCIDIO', cargo:'Aislador Térmico C5', tipo:'campo'},
+  {nombre:'ARIAS CABEZAS ARIEL', cargo:'Trazador', tipo:'campo'},
+  {nombre:'ESCOBAR PALACIO CRISTIAN ANDRES', cargo:'Ayudante Técnico', tipo:'campo'},
+  {nombre:'OVALLE PARDO MANUEL JOSE', cargo:'Ayudante Técnico', tipo:'campo'},
+  {nombre:'GUTIERREZ ESPINOSA CARLOS', cargo:'Ayudante Técnico', tipo:'campo'},
+  {nombre:'TORRES MIRANDA ELKIN', cargo:'Obrero A1', tipo:'campo'},
+  {nombre:'VARGAS RODRIGUEZ EDGAR SEBASTIAN', cargo:'Obrero A1', tipo:'campo'},
+  {nombre:'VARGAS BARRAGAN DORA LUZ', cargo:'Prof. Admin y RRHH', tipo:'admin'},
+  {nombre:'TRIANA TRIANA MARTHA LUCIA', cargo:'Ingeniero Residente', tipo:'admin'},
+  {nombre:'MORENO JUAN ANDRES', cargo:'QAQC', tipo:'admin'},
+  {nombre:'POR DEFINIR', cargo:'Administrador', tipo:'admin'},
+];
+
+let selectedWeather = 'SOLEADO';
+let isoRowCount = 0;
+
+// ── INIT ──
+function init() {
+  document.getElementById('fecha').valueAsDate = new Date();
+  renderPersonal();
+  addIsoRow();
+  msalInstance.handleRedirectPromise().then(resp => {
+    if (resp && resp.accessToken) {
+      accessToken = resp.accessToken;
+      showForm(resp.account);
+    } else {
+      const accounts = msalInstance.getAllAccounts();
+      if (accounts.length > 0) {
+        msalInstance.acquireTokenSilent({ scopes, account: accounts[0] })
+          .then(r => { accessToken = r.accessToken; showForm(accounts[0]); })
+          .catch(() => {});
+      }
+    }
+  });
+}
+
+function showForm(account) {
+  document.getElementById('auth-panel').style.display = 'none';
+  document.getElementById('form-container').style.display = 'block';
+  document.getElementById('submit-bar').style.display = 'flex';
+  document.getElementById('user-badge').style.display = 'flex';
+  document.getElementById('user-name-display').textContent = account.name || account.username;
+}
+
+async function login() {
+  try {
+    const resp = await msalInstance.loginPopup({ scopes });
+    accessToken = resp.accessToken;
+    showForm(resp.account);
+  } catch(e) {
+    showToast('Error al iniciar sesión: ' + e.message, 'error');
+  }
+}
+
+// ── WEATHER ──
+function selectWeather(btn) {
+  document.querySelectorAll('.weather-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedWeather = btn.dataset.val;
+}
+
+// ── PERSONAL ──
+function renderPersonal() {
+  const grid = document.getElementById('personal-grid');
+  grid.innerHTML = PERSONAL_ALL.map((p,i) => `
+    <div class="personal-card ${p.tipo==='campo'?'active':''}" id="pc-${i}" onclick="togglePersonal(${i})">
+      <div class="check">${p.tipo==='campo'?'✓':''}</div>
+      <div class="personal-info">
+        <div class="personal-nombre">${p.nombre.split(' ').slice(0,2).join(' ')}</div>
+        <div class="personal-cargo">${p.cargo}</div>
+      </div>
+    </div>`).join('');
+}
+
+function togglePersonal(i) {
+  const card = document.getElementById(`pc-${i}`);
+  const isActive = card.classList.toggle('active');
+  card.querySelector('.check').textContent = isActive ? '✓' : '';
+}
+
+// ── ISO ROWS ──
+function getIsoOptions() {
+  return ISOS.map(iso =>
+    `<option value="${iso.code}" data-tipo="${iso.tipo}">${iso.item}. ${iso.code}</option>`
+  ).join('');
+}
+
+function addIsoRow() {
+  const tbody = document.getElementById('iso-tbody');
+  const id = ++isoRowCount;
+  const tr = document.createElement('tr');
+  tr.id = `iso-row-${id}`;
+  tr.innerHTML = `
+    <td style="color:var(--text3);font-size:12px;text-align:center">${id}</td>
+    <td>
+      <select onchange="updateIsoRow(${id})" id="iso-code-${id}" style="min-width:300px">
+        <option value="">-- Seleccionar isométrico --</option>
+        ${getIsoOptions()}
+      </select>
+    </td>
+    <td><span class="tipo-badge" id="iso-tipo-${id}">—</span></td>
+    <td>
+      <input type="number" id="iso-ml-${id}" min="0" step="0.01" placeholder="0.00"
+        oninput="calcM2(${id})" style="width:110px">
+    </td>
+    <td><div class="m2-display" id="iso-m2-${id}">—</div></td>
+    <td><input type="text" id="iso-obs-${id}" placeholder="Observación..."></td>
+    <td><button class="btn-del" onclick="delIsoRow(${id})">✕</button></td>`;
+  tbody.appendChild(tr);
+}
+
+function delIsoRow(id) {
+  const tr = document.getElementById(`iso-row-${id}`);
+  if (tr) tr.remove();
+}
+
+function updateIsoRow(id) {
+  const sel = document.getElementById(`iso-code-${id}`);
+  const opt = sel.selectedOptions[0];
+  const tipo = opt ? opt.dataset.tipo : '';
+  const tipoBadge = document.getElementById(`iso-tipo-${id}`);
+  tipoBadge.textContent = tipo || '—';
+  tipoBadge.className = `tipo-badge${tipo ? ' tipo-'+tipo : ''}`;
+  calcM2(id);
+}
+
+function calcM2(id) {
+  const code = document.getElementById(`iso-code-${id}`).value;
+  const ml = parseFloat(document.getElementById(`iso-ml-${id}`).value) || 0;
+  const m2el = document.getElementById(`iso-m2-${id}`);
+
+  if (!code || ml === 0) { m2el.textContent = '—'; return; }
+
+  // Check scrubber
+  if (SCRUBBER_M2[code]) {
+    m2el.textContent = SCRUBBER_M2[code].toFixed(2) + ' m²';
+    return;
+  }
+
+  // Extract DN and lana from code
+  const dnMatch = code.match(/^(\d+)"/);
+  const lanaMatch = code.match(/-(\d+(?:\.\d+)?)\"$/);
+  if (!dnMatch) { m2el.textContent = '—'; return; }
+
+  const dn = dnMatch[1] + '"';
+  const lanaIn = lanaMatch ? parseFloat(lanaMatch[1]) : 1.5;
+  const lanaM = lanaIn === 1 ? 0.0254 : 0.0381;
+
+  const dnData = DN_TABLE[dn];
+  if (!dnData) { m2el.textContent = dn + ' N/D'; return; }
+
+  const dCalc = dnData.dn_m + 2 * dnData.esp_p + lanaM;
+  const m2 = Math.PI * dCalc * ml;
+  m2el.textContent = m2.toFixed(2) + ' m²';
+}
+
+// ── CALCULATE DAY NUMBER ──
+function getDayNumber(fechaStr) {
+  const inicio = new Date('2026-04-08');
+  const fecha = new Date(fechaStr);
+  const diff = Math.round((fecha - inicio) / (1000 * 60 * 60 * 24)) + 1;
+  return diff;
+}
+
+// ── GRAPH API ──
+async function graphRequest(method, endpoint, body) {
+  const resp = await fetch(`https://graph.microsoft.com/v1.0${endpoint}`, {
+    method,
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json'
+    },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  if (!resp.ok) {
+    const err = await resp.text();
+    throw new Error(`Graph error ${resp.status}: ${err}`);
+  }
+  if (resp.status === 204) return null;
+  return resp.json();
+}
+
+async function findExcelFile() {
+  const result = await graphRequest('GET', `/me/drive/root/children?$filter=name eq '${EXCEL_FILE}'&$select=id,name`);
+  if (!result.value || result.value.length === 0) throw new Error('No se encontró el archivo Excel en OneDrive');
+  return result.value[0].id;
+}
+
+async function updateExcelCell(fileId, sheetName, range, values) {
+  await graphRequest('PATCH',
+    `/me/drive/items/${fileId}/workbook/worksheets('${sheetName}')/range(address='${range}')`,
+    { values }
+  );
+}
+
+// ── SUBMIT ──
+async function submitReport() {
+  const fecha = document.getElementById('fecha').value;
+  if (!fecha) { showToast('Selecciona la fecha del reporte', 'error'); return; }
+  if (!accessToken) { showToast('Inicia sesión primero', 'error'); return; }
+
+  const dayNum = getDayNumber(fecha);
+  if (dayNum < 1 || dayNum > 60) {
+    showToast(`Fecha fuera de rango (DIA ${dayNum}). El proyecto va del 08/04/2026 en adelante.`, 'error');
+    return;
+  }
+
+  const sheetName = `DIA-${String(dayNum).padStart(3,'0')}`;
+
+  // Collect ISO rows
+  const isoRows = [];
+  document.querySelectorAll('[id^="iso-code-"]').forEach(sel => {
+    const id = sel.id.replace('iso-code-','');
+    const code = sel.value;
+    if (!code) return;
+    const ml = parseFloat(document.getElementById(`iso-ml-${id}`).value) || 0;
+    const m2Text = document.getElementById(`iso-m2-${id}`).textContent;
+    const m2 = parseFloat(m2Text) || 0;
+    const obs = document.getElementById(`iso-obs-${id}`).value;
+    isoRows.push({code, ml, m2, obs});
+  });
+
+  if (isoRows.length === 0) {
+    showToast('Agrega al menos un isométrico', 'error');
+    return;
+  }
+
+  // Collect personal
+  const asistencia = PERSONAL_ALL.map((p,i) => ({
+    nombre: p.nombre,
+    asistio: document.getElementById(`pc-${i}`)?.classList.contains('active') ? 'SI' : 'NO'
+  }));
+
+  showLoading('Buscando archivo en OneDrive...');
+  try {
+    const fileId = await findExcelFile();
+
+    showLoading(`Escribiendo ${sheetName}...`);
+
+    // Write conditions row 7: weather, horas lluvia, hora inicio, hora fin
+    await updateExcelCell(fileId, sheetName, 'B7:B7', [[selectedWeather]]);
+    await updateExcelCell(fileId, sheetName, 'F7:F7', [[parseFloat(document.getElementById('horas-lluvia').value)||0]]);
+
+    // Write charla row 8
+    const charla = document.getElementById('charla').value;
+    await updateExcelCell(fileId, sheetName, 'H8:H8', [[charla]]);
+
+    // Write ISO rows (rows 11-20, cols B=code, F=DN, G=esp_lana, H=ML)
+    for (let i = 0; i < Math.min(isoRows.length, 10); i++) {
+      const row = 11 + i;
+      const iso = isoRows[i];
+      const dnMatch = iso.code.match(/^(\d+)"/);
+      const dn = dnMatch ? dnMatch[1]+'"' : 'EQUIPO';
+      const lanaMatch = iso.code.match(/-(\d+(?:\.\d+)?)\"$/);
+      const lanaIn = lanaMatch ? parseFloat(lanaMatch[1]) : 1.5;
+      const lanaM = lanaIn === 1 ? 0.0254 : 0.0381;
+
+      await updateExcelCell(fileId, sheetName, `B${row}:B${row}`, [[iso.code]]);
+      await updateExcelCell(fileId, sheetName, `F${row}:F${row}`, [[dn]]);
+      await updateExcelCell(fileId, sheetName, `G${row}:G${row}`, [[SCRUBBER_M2[iso.code] ? iso.m2 : lanaM]]);
+      await updateExcelCell(fileId, sheetName, `H${row}:H${row}`, [[SCRUBBER_M2[iso.code] ? 0 : iso.ml]]);
+      await updateExcelCell(fileId, sheetName, `L${row}:L${row}`, [[iso.obs]]);
+    }
+
+    // Write personal asistencia (rows 29-37, col I)
+    for (let i = 0; i < Math.min(asistencia.length, 9); i++) {
+      const row = 29 + i;
+      await updateExcelCell(fileId, sheetName, `I${row}:I${row}`, [[asistencia[i].asistio]]);
+    }
+
+    // Write materials (rows 57-59 in section 6, col J=cantidad)
+    const zuncho = parseInt(document.getElementById('mat-zuncho').value)||0;
+    const hebilla = parseInt(document.getElementById('mat-hebilla').value)||0;
+    const silicona = parseInt(document.getElementById('mat-silicona').value)||0;
+    await updateExcelCell(fileId, sheetName, 'B57:B57', [['ZUNCHO METALICO']]);
+    await updateExcelCell(fileId, sheetName, 'E57:E57', [['UN']]);
+    await updateExcelCell(fileId, sheetName, 'H57:H57', [[zuncho]]);
+    await updateExcelCell(fileId, sheetName, 'B58:B58', [['HEBILLA']]);
+    await updateExcelCell(fileId, sheetName, 'E58:E58', [['UN']]);
+    await updateExcelCell(fileId, sheetName, 'H58:H58', [[hebilla]]);
+    await updateExcelCell(fileId, sheetName, 'B59:B59', [['SILICONA']]);
+    await updateExcelCell(fileId, sheetName, 'E59:E59', [['TARRO']]);
+    await updateExcelCell(fileId, sheetName, 'H59:H59', [[silicona]]);
+
+    // Write observaciones
+    const obs = document.getElementById('observaciones').value;
+    await updateExcelCell(fileId, sheetName, 'A43:A43', [[obs]]);
+
+    hideLoading();
+    showToast(`✅ Reporte ${sheetName} enviado correctamente`, 'success');
+    setTimeout(() => {
+      if (confirm(`Reporte ${sheetName} guardado en Excel. ¿Enviar otro reporte?`)) {
+        document.getElementById('fecha').value = '';
+        document.getElementById('iso-tbody').innerHTML = '';
+        isoRowCount = 0;
+        addIsoRow();
+        document.getElementById('observaciones').value = '';
+        renderPersonal();
+      }
+    }, 1500);
+
+  } catch(e) {
+    hideLoading();
+    showToast('Error: ' + e.message, 'error');
+    console.error(e);
+  }
+}
+
+// ── UI HELPERS ──
+function showLoading(text) {
+  document.getElementById('loading-text').textContent = text || 'Procesando...';
+  document.getElementById('loading').classList.add('show');
+}
+function hideLoading() {
+  document.getElementById('loading').classList.remove('show');
+}
+
+let toastTimer;
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
+  const icon = type === 'success' ? '✅' : '❌';
+  document.getElementById('toast-icon').textContent = icon;
+  document.getElementById('toast-msg').textContent = msg;
+  t.className = `toast ${type} show`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 5000);
+}
+
+// Update submit summary
+setInterval(() => {
+  const isoCount = document.querySelectorAll('[id^="iso-code-"]').length;
+  const filledIso = [...document.querySelectorAll('[id^="iso-code-"]')].filter(s=>s.value).length;
+  const personalCount = document.querySelectorAll('.personal-card.active').length;
+  const fecha = document.getElementById('fecha')?.value;
+  if (fecha && filledIso > 0) {
+    const d = getDayNumber(fecha);
+    document.getElementById('submit-summary').innerHTML =
+      `<strong>DIA-${String(d).padStart(3,'0')}</strong> · ${filledIso} isométrico(s) · ${personalCount} persona(s)`;
+  }
+}, 1000);
+
+init();
+</script>
+</body>
+</html>
