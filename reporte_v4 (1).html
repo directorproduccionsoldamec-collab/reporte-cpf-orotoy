@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reporte Diario · CPF Orotoy</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d1117;--surface:#161b22;--surface2:#1c2330;--border:#30363d;--accent:#f0a500;--accent2:#2ea043;--accent3:#1f6feb;--danger:#da3633;--text:#e6edf3;--text2:#8b949e;--text3:#6e7681;--radius:8px;--shadow:0 4px 24px rgba(0,0,0,0.4)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;min-height:100vh}
+header{background:linear-gradient(135deg,#0d1117 0%,#1a2332 100%);border-bottom:2px solid var(--accent);padding:16px 24px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow)}
+.logo-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--accent);letter-spacing:1px;text-transform:uppercase}
+.logo-sub{font-size:11px;color:var(--text2);letter-spacing:2px;text-transform:uppercase}
+.header-badge{margin-left:auto;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--accent2);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+#auth-panel{max-width:480px;margin:60px auto;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:40px;box-shadow:var(--shadow);text-align:center}
+#auth-panel h2{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:700;margin-bottom:8px}
+#auth-panel p{color:var(--text2);margin-bottom:32px;font-size:14px}
+.btn-ms{display:inline-flex;align-items:center;gap:12px;background:#2ea3f2;color:white;border:none;border-radius:var(--radius);padding:14px 28px;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;text-decoration:none}
+.btn-ms:hover{background:#1a8cd8;transform:translateY(-1px)}
+#form-container{max-width:900px;margin:0 auto;padding:32px 24px 80px;display:none}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:20px;overflow:hidden;box-shadow:var(--shadow)}
+.section-header{background:var(--surface2);padding:14px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.section-num{background:var(--accent);color:#000;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;font-family:'Barlow Condensed',sans-serif;flex-shrink:0}
+.section-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.section-body{padding:20px}
+.form-row{display:grid;gap:16px;margin-bottom:16px}
+.form-row.cols-2{grid-template-columns:1fr 1fr}
+.form-row.cols-3{grid-template-columns:1fr 1fr 1fr}
+.form-group{display:flex;flex-direction:column;gap:6px}
+label{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2)}
+label .req{color:var(--accent);margin-left:2px}
+input,select,textarea{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);padding:10px 14px;font-size:14px;font-family:'Barlow',sans-serif;transition:border-color .2s;width:100%}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent3)}
+textarea{resize:vertical;min-height:80px}
+.iso-table{width:100%;border-collapse:collapse}
+.iso-table th{background:var(--surface2);padding:8px 10px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text2);text-align:left;border-bottom:1px solid var(--border)}
+.iso-table td{padding:6px;border-bottom:1px solid rgba(48,54,61,.5);vertical-align:middle}
+.iso-table input,.iso-table select{padding:7px 10px;font-size:13px}
+.m2-display{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:7px 10px;font-size:13px;font-weight:600;color:var(--accent);text-align:center;min-width:80px}
+.tipo-badge{display:inline-block;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px;text-align:center;min-width:36px}
+.tipo-AT{background:rgba(46,160,67,.2);color:#3fb950;border:1px solid rgba(46,160,67,.3)}
+.tipo-H{background:rgba(31,111,235,.2);color:#58a6ff;border:1px solid rgba(31,111,235,.3)}
+.btn-add-row{background:transparent;border:1px dashed var(--border);color:var(--text2);padding:10px;width:100%;border-radius:var(--radius);cursor:pointer;font-size:13px;transition:all .2s;margin-top:10px}
+.btn-add-row:hover{border-color:var(--accent3);color:var(--accent3)}
+.btn-del{background:transparent;border:none;color:var(--danger);cursor:pointer;padding:4px 8px;border-radius:4px;font-size:16px}
+.personal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.personal-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .2s;user-select:none}
+.personal-card:hover{border-color:var(--accent3)}
+.personal-card.active{border-color:var(--accent2);background:rgba(46,160,67,.08)}
+.personal-card .check{width:20px;height:20px;border:2px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;font-size:12px}
+.personal-card.active .check{background:var(--accent2);border-color:var(--accent2);color:white}
+.personal-nombre{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.personal-cargo{font-size:11px;color:var(--text2);margin-top:2px}
+.weather-options{display:flex;gap:10px;flex-wrap:wrap}
+.weather-btn{background:var(--bg);border:1px solid var(--border);color:var(--text2);padding:10px 18px;border-radius:20px;cursor:pointer;font-size:13px;font-weight:500;transition:all .2s}
+.weather-btn:hover{border-color:var(--accent3);color:var(--text)}
+.weather-btn.active{border-color:var(--accent);background:rgba(240,165,0,.1);color:var(--accent)}
+.submit-bar{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;z-index:100;box-shadow:0 -4px 24px rgba(0,0,0,.4)}
+.submit-summary{font-size:13px;color:var(--text2)}
+.submit-summary strong{color:var(--accent)}
+.btn-submit{background:var(--accent);color:#000;border:none;border-radius:var(--radius);padding:14px 32px;font-size:15px;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px}
+.btn-submit:hover{background:#ffb700;transform:translateY(-1px)}
+.btn-submit:disabled{background:var(--border);color:var(--text3);cursor:not-allowed;transform:none}
+.toast{position:fixed;top:80px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 20px;font-size:14px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow);z-index:999;transform:translateX(120%);transition:transform .3s cubic-bezier(.34,1.56,.64,1);max-width:360px}
+.toast.show{transform:translateX(0)}
+.toast.success{border-color:var(--accent2)}
+.toast.error{border-color:var(--danger)}
+.loading-overlay{position:fixed;inset:0;background:rgba(13,17,23,.85);display:none;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:16px}
+.loading-overlay.show{display:flex}
+.spinner{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{color:var(--text2);font-size:14px}
+@media(max-width:600px){.form-row.cols-2,.form-row.cols-3{grid-template-columns:1fr}.personal-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <div class="logo-title">⚡ Soldamec</div>
+    <div class="logo-sub">Reporte Diario · CPF Orotoy</div>
+  </div>
+  <div class="header-badge" id="user-badge" style="display:none">
+    <div class="dot"></div>
+    <span id="user-name-display">Conectado</span>
+  </div>
+</header>
+
+<div id="auth-panel">
+  <h2>Reporte Diario</h2>
+  <p>Inicia sesión con tu cuenta de Soldamec para enviar el reporte diario de obra al sistema.</p>
+  <button class="btn-ms" onclick="login()">
+    <svg width="20" height="20" viewBox="0 0 21 21"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg>
+    Iniciar sesión con Microsoft
+  </button>
+</div>
+
+<div id="form-container">
+  <div class="section-card">
+    <div class="section-header"><div class="section-num">1</div><div class="section-title">Información General del Día</div></div>
+    <div class="section-body">
+      <div class="form-row cols-3">
+        <div class="form-group"><label>Fecha <span class="req">*</span></label><input type="date" id="fecha" required></div>
+        <div class="form-group"><label>Hora inicio</label><input type="time" id="hora-inicio" value="07:00"></div>
+        <div class="form-group"><label>Hora fin</label><input type="time" id="hora-fin" value="16:00"></div>
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label>Estado del tiempo</label>
+          <div class="weather-options" id="weather-options">
+            <button type="button" class="weather-btn active" data-val="SOLEADO" onclick="selectWeather(this)">☀️ Soleado</button>
+            <button type="button" class="weather-btn" data-val="NUBLADO" onclick="selectWeather(this)">⛅ Nublado</button>
+            <button type="button" class="weather-btn" data-val="LLUVIOSO" onclick="selectWeather(this)">🌧️ Lluvioso</button>
+            <button type="button" class="weather-btn" data-val="TORMENTA" onclick="selectWeather(this)">⛈️ Tormenta</button>
+          </div>
+        </div>
+        <div class="form-group"><label>Horas de lluvia</label><input type="number" id="horas-lluvia" value="0" min="0" max="12" step="0.5"></div>
+      </div>
+      <div class="form-row"><div class="form-group"><label>Charla de seguridad</label><input type="text" id="charla" placeholder="Ej: Trabajo en alturas, Uso de EPP..."></div></div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header"><div class="section-num">2</div><div class="section-title">Isometría Trabajada</div></div>
+    <div class="section-body">
+      <div style="overflow-x:auto">
+        <table class="iso-table">
+          <thead><tr><th>#</th><th style="min-width:320px">Código Isométrico</th><th>Tipo</th><th style="min-width:120px">ML Instalados</th><th style="min-width:90px">M² Calc.</th><th>Observación</th><th></th></tr></thead>
+          <tbody id="iso-tbody"></tbody>
+        </table>
+      </div>
+      <button type="button" class="btn-add-row" onclick="addIsoRow()">+ Agregar isométrico</button>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header"><div class="section-num">3</div><div class="section-title">Personal en Obra</div></div>
+    <div class="section-body">
+      <p style="font-size:13px;color:var(--text2);margin-bottom:16px">Marca quién asistió hoy.</p>
+      <div class="personal-grid" id="personal-grid"></div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header"><div class="section-num">4</div><div class="section-title">Control de Materiales</div></div>
+    <div class="section-body">
+      <div class="form-row cols-3">
+        <div class="form-group"><label>Zuncho Metálico (unidades)</label><input type="number" id="mat-zuncho" min="0" value="0"></div>
+        <div class="form-group"><label>Hebilla (unidades)</label><input type="number" id="mat-hebilla" min="0" value="0"></div>
+        <div class="form-group"><label>Silicona (tarros)</label><input type="number" id="mat-silicona" min="0" value="0"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header"><div class="section-num">5</div><div class="section-title">Observaciones</div></div>
+    <div class="section-body">
+      <div class="form-group"><label>Observaciones del día</label><textarea id="observaciones" placeholder="Novedades, incidentes, materiales faltantes..."></textarea></div>
+    </div>
+  </div>
+</div>
+
+<div class="submit-bar" id="submit-bar" style="display:none">
+  <div class="submit-summary" id="submit-summary">Completa el formulario para enviar</div>
+  <button class="btn-submit" onclick="submitReport()">📤 Enviar Reporte</button>
+</div>
+
+<div class="loading-overlay" id="loading"><div class="spinner"></div><div class="loading-text" id="loading-text">Enviando...</div></div>
+<div class="toast" id="toast"><span id="toast-icon"></span><span id="toast-msg"></span></div>
+
+<script>
+const CLIENT_ID='7d7d4ea9-5e65-4a1d-a1f6-9bbe7e57c354';
+const TENANT_ID='22f789c2-c9cb-416b-a869-279c18d919d8';
+const REDIRECT_URI='https://directorproduccionsoldamec-collab.github.io/reporte-cpf-orotoy/reporte_v4.html';
+const SCOPES='Files.ReadWrite User.Read';
+const EXCEL_FILE='MAESTRO_OBRA_CPF_OROTOY.xlsx';
+
+let accessToken=null;
+let isoRowCount=0;
+let selectedWeather='SOLEADO';
+
+const ISOS=[{item:1,code:'12"-PFL-00003-AA1A33-01-AT-1.5"',tipo:'AT'},{item:2,code:'12"-PFL-00012-AA1A33-01-AT-1.5"',tipo:'AT'},{item:3,code:'12"-PFL-00013-AA1A33-01-AT-1.5"',tipo:'AT'},{item:4,code:'12"-PFL-00014-AA1A33-01-AT-1.5"',tipo:'AT'},{item:5,code:'12"-CRW-00015-AA1A33-01-H-1.5"',tipo:'H'},{item:6,code:'12"-CRW-00016-AA1A33-01-H-1.5"',tipo:'H'},{item:7,code:'12"-CRW-00017-AA1A33-01-H-1.5"',tipo:'H'},{item:8,code:'12"-CRW-00018-AA1A33-01-H-1.5"',tipo:'H'},{item:9,code:'12"-CRW-00019-AA1A33-01-H-1.5"',tipo:'H'},{item:10,code:'12"-CRW-00020-AA1A33-01-H-1.5"',tipo:'H'},{item:11,code:'12"-CRW-00021-AA1A33-01-H-1.5"',tipo:'H'},{item:12,code:'12"-CRW-00022-AA1A33-01-H-1.5"',tipo:'H'},{item:13,code:'12"-CRW-01010-AA1A33-01-AT-1.5"',tipo:'AT'},{item:14,code:'10"-CRW-01011-AA1A33-01-H-1.5"',tipo:'H'},{item:15,code:'8"-CRW-01013-AA1A33-01-AT-1.5"',tipo:'AT'},{item:16,code:'20"-CRW-01035-AA1A33-01-H-1.5"',tipo:'H'},{item:17,code:'8"-CRW-01038-AA1A33-01-AT-1.5"',tipo:'AT'},{item:18,code:'8"-CRW-01039-AA1A33-01-AT-1.5"',tipo:'AT'},{item:19,code:'12"-CRW-01040-AA1A33-01-AT-1"',tipo:'AT'},{item:20,code:'10"-CRW-01041-AA1A33-01-AT-1.5"',tipo:'AT'},{item:21,code:'10"-CRW-01042-AA1A33-01-AT-1.5"',tipo:'AT'},{item:22,code:'10"-CRW-01043-AA1A33-01-AT-1.5"',tipo:'AT'},{item:23,code:'8"-CRW-01044-AA1A33-01-AT-1.5"',tipo:'AT'},{item:24,code:'4"-CRW-01045-AA1A33-01-AT-1.5"',tipo:'AT'},{item:25,code:'10"-CRW-01048-AA1A33-01-AT-1.5"',tipo:'AT'},{item:26,code:'4"-CRW-01048-AA1A33-01-AT-1.5"',tipo:'AT'},{item:27,code:'8"-CRW-01049-AA1A33-01-AT-1.5"',tipo:'AT'},{item:28,code:'4"-CRW-01050-AA1A33-01-AT-1"',tipo:'AT'},{item:29,code:'16"-CRW-01056-AA1A33-01-H-1.5"',tipo:'H'},{item:30,code:'16"-CRW-01057-AA1A33-01-H-1.5"',tipo:'H'},{item:31,code:'4"-CRW-01095-AA1A33-01-AT-1.5"',tipo:'AT'},{item:32,code:'6"-CRW-01109-AA1A33-01-AT-1.5"',tipo:'AT'},{item:33,code:'6"-CRW-01110-AA1A33-01-AT-1.5"',tipo:'AT'},{item:34,code:'6"-CRW-01111-AA1A33-01-AT-1.5"',tipo:'AT'},{item:35,code:'6"-CRW-01112-AA1A33-01-AT-1.5"',tipo:'AT'},{item:36,code:'8"-CRU-03039-AA1A33-01-H-1.5"',tipo:'H'},{item:37,code:'12"-PFL-00033-AA2A33-01-H-1.5"',tipo:'H'},{item:38,code:'12"-PFL-00001-AA2A33-01-H-1.5"',tipo:'H'},{item:39,code:'12"-PFL-00002-AA2A33-01-H-1.5"',tipo:'H'},{item:40,code:'20"-PFL-00005-AA2A33-01-H-1.5"',tipo:'H'},{item:41,code:'4"-CRW-01043-AA1A33-01-AT-1.5"',tipo:'AT'},{item:42,code:'20"-PFL-00007-AA2A33-01-H-1.5"',tipo:'H'},{item:43,code:'20"-PFL-00009-AA2A33-01-H-1.5"',tipo:'H'},{item:44,code:'20"-PFL-00010-AA2A33-01-H-1.5"',tipo:'H'},{item:45,code:'20"-PFL-00011-AA2A33-01-H-1.5"',tipo:'H'},{item:46,code:'20"-PFL-00034-AA2A32-01-H-1.5"',tipo:'H'},{item:47,code:'6"-PFL-00006-AA2A33-01-H-1.5"',tipo:'H'},{item:48,code:'12"-CRU-03029-AA3A33-01-H-1.5"',tipo:'H'},{item:49,code:'16"-CRW-01121-AA1A33-01-H-1.5"',tipo:'H'},{item:50,code:'16"-CRW-01071-AA1A33-01-H-1.5"',tipo:'H'},{item:51,code:'16"-CRW-01060-AA1A33-01-H-1.5"',tipo:'H'},{item:52,code:'16"-CRW-01061-AA1A33-01-H-1.5"',tipo:'H'},{item:53,code:'16"-CRW-01062-AA1A33-01-AT-1.5"',tipo:'AT'},{item:54,code:'16"-CRW-01063-AA1A33-01-AT-1.5"',tipo:'AT'},{item:55,code:'16"-CRW-01066-AA1A33-01-AT-1.5"',tipo:'AT'},{item:56,code:'6"-CRW-01072-AA1A33-01-AT-1.5"',tipo:'AT'},{item:57,code:'8"-CRW-01073-AA1A33-01-AT-1.5"',tipo:'AT'},{item:58,code:'16"-CRW-01064-AA1A33-01-AT-1.5"',tipo:'AT'},{item:173,code:'SCRUBBER DE ESTABILIZACION TANQUE TTI',tipo:'H'},{item:174,code:'SCRUBBER DESCARGA TTI',tipo:'H'},{item:175,code:'SCRUBBER SUCCION TTI',tipo:'H'}];
+
+const SCRUBBER_M2={'SCRUBBER DE ESTABILIZACION TANQUE TTI':4.45,'SCRUBBER DESCARGA TTI':4.45,'SCRUBBER SUCCION TTI':6.50};
+const DN_TABLE={'4"':{dn_m:0.1016,esp_p:0.00602},'6"':{dn_m:0.1524,esp_p:0.00711},'8"':{dn_m:0.2032,esp_p:0.00818},'10"':{dn_m:0.2540,esp_p:0.00927},'12"':{dn_m:0.3048,esp_p:0.01031},'16"':{dn_m:0.4064,esp_p:0.01207},'18"':{dn_m:0.4572,esp_p:0.01427},'20"':{dn_m:0.5080,esp_p:0.01509},'24"':{dn_m:0.6096,esp_p:0.01748}};
+const PERSONAL_ALL=[{nombre:'JIMENEZ ZAMORA WILSON ALCIDIO',cargo:'Aislador C5',activo:true},{nombre:'ARIAS CABEZAS ARIEL',cargo:'Trazador',activo:true},{nombre:'ESCOBAR PALACIO CRISTIAN ANDRES',cargo:'Ayudante Técnico',activo:true},{nombre:'OVALLE PARDO MANUEL JOSE',cargo:'Ayudante Técnico',activo:true},{nombre:'GUTIERREZ ESPINOSA CARLOS',cargo:'Ayudante Técnico',activo:true},{nombre:'TORRES MIRANDA ELKIN',cargo:'Obrero A1',activo:true},{nombre:'VARGAS RODRIGUEZ EDGAR SEBASTIAN',cargo:'Obrero A1',activo:true},{nombre:'VARGAS BARRAGAN DORA LUZ',cargo:'Prof. Admin',activo:false},{nombre:'TRIANA TRIANA MARTHA LUCIA',cargo:'Ing. Residente',activo:false},{nombre:'MORENO JUAN ANDRES',cargo:'QAQC',activo:false},{nombre:'POR DEFINIR',cargo:'Administrador',activo:false}];
+
+// ── AUTH con flujo de redirección manual ──
+function login(){
+  const authUrl=`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/authorize?`+
+    `client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`+
+    `&scope=${encodeURIComponent(SCOPES)}&response_mode=fragment&nonce=${Math.random()}`;
+  window.location.href=authUrl;
+}
+
+function checkToken(){
+  const hash=window.location.hash;
+  if(hash&&hash.includes('access_token')){
+    const params=new URLSearchParams(hash.substring(1));
+    accessToken=params.get('access_token');
+    history.replaceState(null,'',window.location.pathname);
+    showForm();
+    return true;
+  }
+  const saved=sessionStorage.getItem('cpf_token');
+  if(saved){accessToken=saved;showForm();return true;}
+  return false;
+}
+
+function showForm(){
+  if(accessToken) sessionStorage.setItem('cpf_token',accessToken);
+  document.getElementById('auth-panel').style.display='none';
+  document.getElementById('form-container').style.display='block';
+  document.getElementById('submit-bar').style.display='flex';
+  document.getElementById('user-badge').style.display='flex';
+  document.getElementById('user-name-display').textContent='SEBASTIAN ESCOBAR';
+}
+
+function selectWeather(btn){
+  document.querySelectorAll('.weather-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedWeather=btn.dataset.val;
+}
+
+function renderPersonal(){
+  document.getElementById('personal-grid').innerHTML=PERSONAL_ALL.map((p,i)=>`
+    <div class="personal-card ${p.activo?'active':''}" id="pc-${i}" onclick="togglePersonal(${i})">
+      <div class="check">${p.activo?'✓':''}</div>
+      <div>
+        <div class="personal-nombre">${p.nombre.split(' ').slice(0,2).join(' ')}</div>
+        <div class="personal-cargo">${p.cargo}</div>
+      </div>
+    </div>`).join('');
+}
+
+function togglePersonal(i){
+  const card=document.getElementById(`pc-${i}`);
+  const active=card.classList.toggle('active');
+  card.querySelector('.check').textContent=active?'✓':'';
+}
+
+function getIsoOptions(){
+  return ISOS.map(iso=>`<option value="${iso.code}" data-tipo="${iso.tipo}">${iso.item}. ${iso.code}</option>`).join('');
+}
+
+function addIsoRow(){
+  const id=++isoRowCount;
+  const tr=document.createElement('tr');
+  tr.id=`iso-row-${id}`;
+  tr.innerHTML=`<td style="color:var(--text3);text-align:center;font-size:12px">${id}</td>
+    <td><select onchange="updateIsoRow(${id})" id="iso-code-${id}" style="min-width:300px"><option value="">-- Seleccionar --</option>${getIsoOptions()}</select></td>
+    <td><span class="tipo-badge" id="iso-tipo-${id}">—</span></td>
+    <td><input type="number" id="iso-ml-${id}" min="0" step="0.01" placeholder="0.00" oninput="calcM2(${id})" style="width:110px"></td>
+    <td><div class="m2-display" id="iso-m2-${id}">—</div></td>
+    <td><input type="text" id="iso-obs-${id}" placeholder="Obs..."></td>
+    <td><button class="btn-del" onclick="document.getElementById('iso-row-${id}').remove()">✕</button></td>`;
+  document.getElementById('iso-tbody').appendChild(tr);
+}
+
+function updateIsoRow(id){
+  const sel=document.getElementById(`iso-code-${id}`);
+  const opt=sel.selectedOptions[0];
+  const tipo=opt?opt.dataset.tipo:'';
+  const badge=document.getElementById(`iso-tipo-${id}`);
+  badge.textContent=tipo||'—';
+  badge.className=`tipo-badge${tipo?' tipo-'+tipo:''}`;
+  calcM2(id);
+}
+
+function calcM2(id){
+  const code=document.getElementById(`iso-code-${id}`).value;
+  const ml=parseFloat(document.getElementById(`iso-ml-${id}`).value)||0;
+  const el=document.getElementById(`iso-m2-${id}`);
+  if(!code||ml===0){el.textContent='—';return;}
+  if(SCRUBBER_M2[code]){el.textContent=SCRUBBER_M2[code].toFixed(2)+' m²';return;}
+  const dnMatch=code.match(/^(\d+)"/);
+  const lanaMatch=code.match(/-(\d+(?:\.\d+)?)"$/);
+  if(!dnMatch){el.textContent='—';return;}
+  const dn=dnMatch[1]+'"';
+  const lanaIn=lanaMatch?parseFloat(lanaMatch[1]):1.5;
+  const lanaM=lanaIn===1?0.0254:0.0381;
+  const dnData=DN_TABLE[dn];
+  if(!dnData){el.textContent=dn+' N/D';return;}
+  el.textContent=(Math.PI*(dnData.dn_m+2*dnData.esp_p+lanaM)*ml).toFixed(2)+' m²';
+}
+
+function getDayNumber(fecha){
+  const inicio=new Date('2026-04-08');
+  const f=new Date(fecha);
+  return Math.round((f-inicio)/(1000*60*60*24))+1;
+}
+
+async function graphPatch(fileId,sheet,range,values){
+  const r=await fetch(`https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets('${sheet}')/range(address='${range}')`,{
+    method:'PATCH',
+    headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'},
+    body:JSON.stringify({values})
+  });
+  if(!r.ok) throw new Error(await r.text());
+}
+
+async function submitReport(){
+  const fecha=document.getElementById('fecha').value;
+  if(!fecha){showToast('Selecciona la fecha','error');return;}
+  if(!accessToken){showToast('Inicia sesión primero','error');return;}
+  const dayNum=getDayNumber(fecha);
+  if(dayNum<1||dayNum>60){showToast(`Fecha fuera de rango (Día ${dayNum})`, 'error');return;}
+  const sheet=`DIA-${String(dayNum).padStart(3,'0')}`;
+
+  const isoRows=[];
+  document.querySelectorAll('[id^="iso-code-"]').forEach(sel=>{
+    const id=sel.id.replace('iso-code-','');
+    if(!sel.value)return;
+    const ml=parseFloat(document.getElementById(`iso-ml-${id}`).value)||0;
+    const m2Text=document.getElementById(`iso-m2-${id}`).textContent;
+    const m2=parseFloat(m2Text)||0;
+    isoRows.push({code:sel.value,ml,m2,obs:document.getElementById(`iso-obs-${id}`).value});
+  });
+  if(!isoRows.length){showToast('Agrega al menos un isométrico','error');return;}
+
+  showLoading('Buscando archivo...');
+  try{
+    const res=await fetch(`https://graph.microsoft.com/v1.0/me/drive/root/children?$filter=name eq '${EXCEL_FILE}'&$select=id`,{
+      headers:{'Authorization':'Bearer '+accessToken}});
+    const data=await res.json();
+    if(!data.value||!data.value.length) throw new Error('Archivo no encontrado en OneDrive');
+    const fileId=data.value[0].id;
+
+    showLoading(`Escribiendo ${sheet}...`);
+    await graphPatch(fileId,sheet,'B7:B7',[[selectedWeather]]);
+    await graphPatch(fileId,sheet,'F7:F7',[[parseFloat(document.getElementById('horas-lluvia').value)||0]]);
+    await graphPatch(fileId,sheet,'H8:H8',[[document.getElementById('charla').value]]);
+
+    for(let i=0;i<Math.min(isoRows.length,10);i++){
+      const r=11+i;const iso=isoRows[i];
+      const dnMatch=iso.code.match(/^(\d+)"/);
+      const dn=dnMatch?dnMatch[1]+'"':'EQUIPO';
+      const lanaMatch=iso.code.match(/-(\d+(?:\.\d+)?)"$/);
+      const lanaM=(lanaMatch&&parseFloat(lanaMatch[1])===1)?0.0254:0.0381;
+      await graphPatch(fileId,sheet,`B${r}:B${r}`,[[iso.code]]);
+      await graphPatch(fileId,sheet,`F${r}:F${r}`,[[dn]]);
+      await graphPatch(fileId,sheet,`G${r}:G${r}`,[[SCRUBBER_M2[iso.code]?iso.m2:lanaM]]);
+      await graphPatch(fileId,sheet,`H${r}:H${r}`,[[SCRUBBER_M2[iso.code]?0:iso.ml]]);
+      if(iso.obs) await graphPatch(fileId,sheet,`L${r}:L${r}`,[[iso.obs]]);
+    }
+
+    const asistencia=PERSONAL_ALL.map((_,i)=>document.getElementById(`pc-${i}`)?.classList.contains('active')?'SI':'NO');
+    for(let i=0;i<Math.min(asistencia.length,11);i++){
+      await graphPatch(fileId,sheet,`I${29+i}:I${29+i}`,[[asistencia[i]]]);
+    }
+
+    await graphPatch(fileId,sheet,'H57:H57',[[parseInt(document.getElementById('mat-zuncho').value)||0]]);
+    await graphPatch(fileId,sheet,'H58:H58',[[parseInt(document.getElementById('mat-hebilla').value)||0]]);
+    await graphPatch(fileId,sheet,'H59:H59',[[parseInt(document.getElementById('mat-silicona').value)||0]]);
+
+    const obs=document.getElementById('observaciones').value;
+    if(obs) await graphPatch(fileId,sheet,'A43:A43',[[obs]]);
+
+    hideLoading();
+    showToast(`✅ Reporte ${sheet} enviado correctamente`,'success');
+    setTimeout(()=>{
+      if(confirm(`${sheet} guardado. ¿Enviar otro reporte?`)){
+        document.getElementById('fecha').value='';
+        document.getElementById('iso-tbody').innerHTML='';
+        isoRowCount=0;addIsoRow();
+        document.getElementById('observaciones').value='';
+        renderPersonal();
+      }
+    },1500);
+  }catch(e){hideLoading();showToast('Error: '+e.message,'error');console.error(e);}
+}
+
+function showLoading(t){document.getElementById('loading-text').textContent=t||'...';document.getElementById('loading').classList.add('show')}
+function hideLoading(){document.getElementById('loading').classList.remove('show')}
+let tt;
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  document.getElementById('toast-icon').textContent=type==='success'?'✅':'❌';
+  document.getElementById('toast-msg').textContent=msg;
+  t.className=`toast ${type} show`;
+  clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),5000);
+}
+
+setInterval(()=>{
+  const filled=[...document.querySelectorAll('[id^="iso-code-"]')].filter(s=>s.value).length;
+  const personal=document.querySelectorAll('.personal-card.active').length;
+  const fecha=document.getElementById('fecha')?.value;
+  if(fecha&&filled>0){
+    const d=getDayNumber(fecha);
+    document.getElementById('submit-summary').innerHTML=`<strong>DIA-${String(d).padStart(3,'0')}</strong> · ${filled} isométrico(s) · ${personal} persona(s)`;
+  }
+},1000);
+
+// INIT
+document.getElementById('fecha').valueAsDate=new Date();
+renderPersonal();
+addIsoRow();
+checkToken();
+</script>
+</body>
+</html>
